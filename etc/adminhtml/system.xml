@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system.xsd">
+    <system>
+        <tab id="storetown" translate="label" sortOrder="500">
+            <label>Storetown</label>
+        </tab>
+        <section id="tax_sync" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>EU Tax Rate Sync</label>
+            <tab>storetown</tab>
+            <resource>Storetown_TaxSync::config</resource>
+            <group id="info" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Extension Info</label>
+                <field id="about" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label></label>
+                    <frontend_model>Storetown\TaxSync\Block\Adminhtml\System\Config\Info</frontend_model>
+                </field>
+            </group>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Settings</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Auto Sync</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Automatically sync European VAT rates via cron</comment>
+                </field>
+                <field id="sync_frequency" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sync Frequency</label>
+                    <source_model>Storetown\TaxSync\Model\Config\Source\Frequency</source_model>
+                    <backend_model>Storetown\TaxSync\Model\Config\Backend\CronFrequency</backend_model>
+                    <comment>How often to check for VAT rate changes</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="api_source" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Data Source</label>
+                    <source_model>Storetown\TaxSync\Model\Config\Source\ApiSource</source_model>
+                    <comment>Source for VAT rate data</comment>
+                </field>
+                <field id="include_non_eu" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Include Non-EU Countries</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Also sync CH, NO, GB rates</comment>
+                </field>
+            </group>
+            <group id="rules" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Tax Rules</label>
+                <field id="create_rules" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Auto-Create Tax Rules</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Automatically create Tax Rules for each synced Tax Rate</comment>
+                </field>
+                <field id="customer_tax_classes" translate="label comment" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Customer Tax Classes</label>
+                    <source_model>Magento\Tax\Model\TaxClass\Source\Customer</source_model>
+                    <comment>Select customer tax classes to apply rules to. Leave empty for all.</comment>
+                    <depends>
+                        <field id="create_rules">1</field>
+                    </depends>
+                </field>
+                <field id="product_tax_classes" translate="label comment" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Tax Classes (Standard Rate)</label>
+                    <source_model>Magento\Tax\Model\TaxClass\Source\Product</source_model>
+                    <comment>Product tax classes for standard VAT rates (e.g. 19%, 21%). Leave empty to use "Taxable Goods".</comment>
+                    <depends>
+                        <field id="create_rules">1</field>
+                    </depends>
+                </field>
+                <field id="product_tax_classes_reduced" translate="label comment" type="multiselect" sortOrder="35" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Tax Classes (Reduced Rate)</label>
+                    <source_model>Magento\Tax\Model\TaxClass\Source\Product</source_model>
+                    <comment>Product tax classes for reduced VAT rates (e.g. 7%, 10%). Leave empty to auto-create "Reduced Rate Goods".</comment>
+                    <depends>
+                        <field id="create_rules">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="notifications" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Notifications</label>
+                <field id="email_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Email Notifications</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="email_recipient" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Notification Email</label>
+                    <validate>validate-email</validate>
+                    <comment>Email address for rate change notifications</comment>
+                    <depends>
+                        <field id="email_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="admin_notification" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Admin Notification</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show notification in admin panel when rates change</comment>
+                </field>
+            </group>
+            <group id="manual" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Manual Sync</label>
+                <field id="sync_button" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sync Now</label>
+                    <frontend_model>Storetown\TaxSync\Block\Adminhtml\System\Config\SyncButton</frontend_model>
+                </field>
+                <field id="last_sync" translate="label" type="label" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Last Sync</label>
+                    <frontend_model>Storetown\TaxSync\Block\Adminhtml\System\Config\LastSync</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

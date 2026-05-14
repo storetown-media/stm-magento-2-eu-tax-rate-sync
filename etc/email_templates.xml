@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="tax_sync_rate_changed" label="Tax Rate Changed Notification" file="rate_changed.html" type="html" module="Storetown_TaxSync" area="adminhtml"/>
+    <template id="tax_sync_error" label="Tax Sync Error Notification" file="sync_error.html" type="html" module="Storetown_TaxSync" area="adminhtml"/>
+</config>

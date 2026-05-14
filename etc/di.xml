@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- CLI Commands -->
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="tax_sync_run" xsi:type="object">Storetown\TaxSync\Console\Command\SyncCommand</item>
+                <item name="tax_sync_status" xsi:type="object">Storetown\TaxSync\Console\Command\StatusCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- TaxSyncService with explicit dependency injection -->
+    <type name="Storetown\TaxSync\Model\TaxSyncService">
+        <arguments>
+            <argument name="config" xsi:type="object">Storetown\TaxSync\Helper\Config</argument>
+            <argument name="apiSourcePool" xsi:type="object">Storetown\TaxSync\Model\ApiSourcePool</argument>
+            <argument name="taxRateRepository" xsi:type="object">Magento\Tax\Api\TaxRateRepositoryInterface</argument>
+            <argument name="taxRuleRepository" xsi:type="object">Magento\Tax\Api\TaxRuleRepositoryInterface</argument>
+            <argument name="taxRateFactory" xsi:type="object">Magento\Tax\Api\Data\TaxRateInterfaceFactory</argument>
+            <argument name="taxRuleFactory" xsi:type="object">Magento\Tax\Api\Data\TaxRuleInterfaceFactory</argument>
+            <argument name="rateCollectionFactory" xsi:type="object">Magento\Tax\Model\ResourceModel\Calculation\Rate\CollectionFactory</argument>
+            <argument name="ruleCollectionFactory" xsi:type="object">Magento\Tax\Model\ResourceModel\Calculation\Rule\CollectionFactory</argument>
+            <argument name="taxClassRepository" xsi:type="object">Magento\Tax\Api\TaxClassRepositoryInterface</argument>
+            <argument name="taxClassDataFactory" xsi:type="object">Magento\Tax\Api\Data\TaxClassInterfaceFactory</argument>
+            <argument name="searchCriteriaBuilder" xsi:type="object">Magento\Framework\Api\SearchCriteriaBuilder</argument>
+            <argument name="notificationService" xsi:type="object">Storetown\TaxSync\Model\NotificationService</argument>
+            <argument name="configWriter" xsi:type="object">Magento\Framework\App\Config\Storage\WriterInterface</argument>
+            <argument name="dateTime" xsi:type="object">Magento\Framework\Stdlib\DateTime\DateTime</argument>
+            <argument name="lockManager" xsi:type="object">Magento\Framework\Lock\LockManagerInterface</argument>
+            <argument name="logger" xsi:type="object">Storetown\TaxSync\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <!-- API Source Pool -->
+    <type name="Storetown\TaxSync\Model\ApiSourcePool">
+        <arguments>
+            <argument name="sources" xsi:type="array">
+                <item name="vatcomply" xsi:type="object">Storetown\TaxSync\Model\Api\VatComply</item>
+                <item name="euvatrates" xsi:type="object">Storetown\TaxSync\Model\Api\EuVatRates</item>
+                <item name="fallback" xsi:type="object">Storetown\TaxSync\Model\Api\Fallback</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Logger -->
+    <type name="Storetown\TaxSync\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Storetown\TaxSync\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">taxsync</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Storetown\TaxSync\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

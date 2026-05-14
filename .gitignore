@@ -1,0 +1,31 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Magento-generated artifacts (sollten nie in einem Modul-Repo landen, defensiv)
+/generated/
+/var/
+/pub/static/
+/pub/media/
+
+# Composer
+composer.lock
+
+# Testing artifacts
+.phpunit.result.cache
+/.phpunit.cache/
+
+# Logs
+*.log

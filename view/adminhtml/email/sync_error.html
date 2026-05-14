@@ -1,0 +1,47 @@
+<!--@subject Tax Sync Fehler — Automatische MwSt-Synchronisierung fehlgeschlagen @-->
+<!--@vars
+{"var error_message":"Fehlermeldung","var store_name":"Shop Name","var sync_date":"Datum"}
+@-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tax Sync Fehler</title>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #333; line-height: 1.6; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #fff;">
+
+        <div style="border-bottom: 3px solid #dc3545; padding-bottom: 15px; margin-bottom: 20px;">
+            <h1 style="font-size: 22px; font-weight: normal; margin: 0; color: #333;">
+                ⚠️ Tax Sync Fehler
+            </h1>
+        </div>
+
+        <p style="margin: 0 0 15px;">
+            Die automatische MwSt-Synchronisierung in <strong>{{var store_name}}</strong> ist fehlgeschlagen:
+        </p>
+
+        <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 15px; margin: 20px 0;">
+            <strong>Fehlermeldung:</strong><br>
+            {{var error_message}}
+        </div>
+
+        <p style="margin: 15px 0;">
+            Bitte prüfen Sie die Logdatei <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px;">var/log/tax_sync.log</code>
+            für weitere Details.
+        </p>
+
+        <p style="margin: 20px 0 0; font-size: 12px; color: #666;">
+            Fehlgeschlagen am: {{var sync_date}}<br>
+            Sie können die Synchronisierung manuell im Magento Admin unter
+            <em>Stores → Configuration → Storetown → EU Tax Rate Sync</em> erneut starten.
+        </p>
+
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 11px; color: #999;">
+            Diese E-Mail wurde automatisch von Storetown TaxSync generiert.
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!--@subject MwSt-Sätze wurden aktualisiert @-->
+<!--@vars
+{"var changes":"Änderungen","var store_name":"Shop Name","var sync_date":"Sync Datum"}
+@-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MwSt-Sätze aktualisiert</title>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #333; line-height: 1.6; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #fff;">
+        
+        <div style="border-bottom: 3px solid #f37b20; padding-bottom: 15px; margin-bottom: 20px;">
+            <h1 style="font-size: 22px; font-weight: normal; margin: 0; color: #333;">
+                🔄 MwSt-Sätze wurden aktualisiert
+            </h1>
+        </div>
+
+        <p style="margin: 0 0 15px;">
+            Folgende Steuersätze wurden in <strong>{{var store_name}}</strong> automatisch aktualisiert:
+        </p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <thead>
+                <tr style="background: #f5f5f5;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Land</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Code</th>
+                    <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Alter Satz</th>
+                    <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Neuer Satz</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{var changes}}
+            </tbody>
+        </table>
+
+        <p style="margin: 20px 0 0; font-size: 12px; color: #666;">
+            Sync durchgeführt am: {{var sync_date}}<br>
+            Bitte überprüfen Sie die Änderungen im Magento Admin unter <em>Stores → Tax Rules</em>.
+        </p>
+
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 11px; color: #999;">
+            Diese E-Mail wurde automatisch von Storetown TaxSync generiert.
+        </div>
+        
+    </div>
+</body>
+</html>
