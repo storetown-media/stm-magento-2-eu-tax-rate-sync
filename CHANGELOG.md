@@ -5,6 +5,14 @@ Alle wichtigen Änderungen an dieser Extension werden in dieser Datei dokumentie
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.3.1] - 2026-06-09
+
+### Behoben
+
+- **Magento 2.4.7 / 2.4.8 Kompatibilität:** Composer-Constraint `magento/module-email: ^101.2` auf `^101.1` korrigiert. Version `101.2` existiert in keinem Magento-2.4.x-Release (höchste ist `101.1.x`), wodurch `composer require storetown/module-tax-sync` mit „could not be resolved" fehlschlug. Betraf alle bisherigen Releases (1.1.0–1.3.0).
+
+---
+
 ## [1.3.0] - 2026-05-14
 
 ### Geändert
