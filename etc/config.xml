@@ -6,7 +6,7 @@
                 <enabled>1</enabled>
                 <sync_frequency>weekly</sync_frequency>
                 <cron_schedule>0 3 * * 1</cron_schedule>
-                <api_source>euvatrates</api_source>
+                <api_source>vatapieu</api_source>
                 <include_non_eu>1</include_non_eu>
             </general>
             <rules>

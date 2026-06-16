@@ -69,7 +69,7 @@ Navigieren Sie zu **Stores → Configuration → Storetown → EU Tax Rate Sync*
 |--------|--------------|
 | Enable Auto Sync | Aktiviert die automatische Cron-Synchronisierung |
 | Sync Frequency | Täglich, Wöchentlich oder Monatlich |
-| Data Source | API-Quelle (EU VAT Rates API empfohlen) |
+| Data Source | API-Quelle (vat-api.eu empfohlen) |
 | Include Non-EU | CH, NO, GB mit einbeziehen |
 
 ### Tax Rules
@@ -125,7 +125,7 @@ bin/magento tax:sync:status
 | Zypern | CY | 19% | 5% |
 | Tschechien | CZ | 21% | 12% |
 | Dänemark | DK | 25% | - |
-| Estland | EE | 22% | 9% |
+| Estland | EE | 24% | 9% |
 | Finnland | FI | 25,5% | 14% |
 | Frankreich | FR | 20% | 5,5% |
 | Deutschland | DE | 19% | 7% |
@@ -140,8 +140,8 @@ bin/magento tax:sync:status
 | Niederlande | NL | 21% | 9% |
 | Polen | PL | 23% | 8% |
 | Portugal | PT | 23% | 13% |
-| Rumänien | RO | 19% | 9% |
-| Slowakei | SK | 23% | 10% |
+| Rumänien | RO | 21% | 11% |
+| Slowakei | SK | 23% | 5% |
 | Slowenien | SI | 22% | 9,5% |
 | Spanien | ES | 21% | 10% |
 | Schweden | SE | 25% | 12% |
@@ -153,6 +153,8 @@ bin/magento tax:sync:status
 | Schweiz | CH | 8,1% | 2,6% |
 | Großbritannien | GB | 20% | 5% |
 | Norwegen | NO | 25% | 15% |
+
+> **Datenquelle & ermäßigte Sätze:** Standardsätze werden live von [vat-api.eu](https://vat-api.eu/) bezogen (kostenlos, ohne API-Key); bei nicht erreichbarer API greifen die gepflegten Fallback-Daten. Da viele Länder **mehrere** ermäßigte Sätze haben (super-reduziert / ermäßigt / Park), importiert die Extension pro Land **einen** ermäßigten Hauptsatz (Bücher, Medikamente, Grundnahrungsmittel). Diesen können Sie pro Land jederzeit unter **Stores → Tax Zones and Rates** anpassen.
 
 ---
 

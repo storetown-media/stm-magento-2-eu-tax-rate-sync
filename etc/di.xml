@@ -36,8 +36,9 @@
     <type name="Storetown\TaxSync\Model\ApiSourcePool">
         <arguments>
             <argument name="sources" xsi:type="array">
-                <item name="vatcomply" xsi:type="object">Storetown\TaxSync\Model\Api\VatComply</item>
+                <item name="vatapieu" xsi:type="object">Storetown\TaxSync\Model\Api\VatApiEu</item>
                 <item name="euvatrates" xsi:type="object">Storetown\TaxSync\Model\Api\EuVatRates</item>
+                <item name="vatcomply" xsi:type="object">Storetown\TaxSync\Model\Api\VatComply</item>
                 <item name="fallback" xsi:type="object">Storetown\TaxSync\Model\Api\Fallback</item>
             </argument>
         </arguments>

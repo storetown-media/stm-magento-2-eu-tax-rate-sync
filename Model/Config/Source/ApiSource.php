@@ -20,8 +20,9 @@ class ApiSource implements OptionSourceInterface
     public function toOptionArray(): array
     {
         return [
-            ['value' => 'euvatrates', 'label' => __('EU VAT Rates API (Recommended)')],
+            ['value' => 'vatapieu', 'label' => __('VAT-API.eu (Recommended)')],
             ['value' => 'fallback', 'label' => __('Static Fallback (No API)')],
+            ['value' => 'euvatrates', 'label' => __('EU VAT Rates API (Deprecated - outdated data)')],
             ['value' => 'vatcomply', 'label' => __('VatComply API (Deprecated - Not Working)')],
         ];
     }

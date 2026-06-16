@@ -5,6 +5,32 @@ Alle wichtigen Änderungen an dieser Extension werden in dieser Datei dokumentie
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.4.0] - 2026-06-16
+
+### Behoben
+
+- **CRITICAL: Veraltete Datenquelle.** Die bisherige Primärquelle `euvatrates.com` wird seit 2016 nicht mehr gepflegt (`"last_updated":"2016-01-01"`) und liefert falsche Standardsätze (z. B. Rumänien 20 % statt aktuell 21 %). Da der Endpunkt weiterhin mit HTTP 200 und gültigem JSON antwortet, wurde er von der Verfügbarkeitsprüfung fälschlich als „erreichbar" eingestuft — der Fallback griff nie. `EuVatRates` ist jetzt dauerhaft als nicht verfügbar markiert und wird nicht mehr ausgewählt.
+
+### Hinzugefügt
+
+- **`Model/Api/VatApiEu.php` — neue, gepflegte Primärquelle [vat-api.eu](https://vat-api.eu/)** (kostenlos, ohne API-Key). Liefert aktuelle Standardsätze für alle 27 EU-Mitgliedstaaten und ist neuer Standard (`tax_sync/general/api_source = vatapieu`).
+- **`Model/Data/EuVatReducedRates.php`** — kuratierte Map der ermäßigten Sätze (Hauptsatz pro Land) als einzige Quelle der Wahrheit, gemeinsam genutzt von `VatApiEu` und `Fallback` (kein Drift mehr zwischen Live-Quelle und Fallback).
+- **`Model/Data/NonEuVatRates.php`** — geteilte statische Sätze für CH/GB/NO. Da vat-api.eu nur die 27 EU-Staaten liefert, ergänzt die Live-Quelle diese Länder, sodass „Nicht-EU-Länder einbeziehen" jetzt auch mit der Live-Quelle funktioniert (zuvor wurden CH/NO über die Live-Quelle nie synchronisiert).
+- Strukturprüfung in `VatApiEu`: Antworten mit weniger als 20 verwertbaren Ländern werden abgelehnt (Schutz gegen degradierte, aber HTTP-200-antwortende API).
+
+### Geändert
+
+- **Hybrider Datenansatz:** Der **Standardsatz** wird live aus vat-api.eu gezogen (rechtlich kritisch, häufig geändert, zuverlässig); der **ermäßigte Satz** kommt aus der kuratierten Map. Hintergrund: Länder haben mehrere ermäßigte Sätze (super-reduziert/ermäßigt/Park) ohne maschinenlesbaren Typ, und vat-api.eu enthält bei ermäßigten Sätzen vereinzelt Fehler (z. B. FI 13,5 % statt 14 %).
+- **Aktualisierte statische Fallback-Daten (Stand Juni 2026):** Estland Standard 22 % → 24 % (seit 2025-07-01); Rumänien Standard 19 % → 21 % und ermäßigt 9 % → 11 % (seit 2025-08-01); Slowakei ermäßigt 10 % → 5 % (alter 10 %-Satz 2025 abgeschafft).
+- `Model/Config/Source/ApiSource.php` — Dropdown: „VAT-API.eu (Empfohlen)" als erste Option; `euvatrates` als „(Veraltet – Daten von 2016)" gekennzeichnet.
+- `etc/csp_whitelist.xml` — CSP-Whitelist-Host von `euvatrates.com` auf `vat-api.eu` umgestellt.
+
+### Hinweis zum Update
+
+- Bestehende Installationen mit gespeicherter Quelle `euvatrates` wechseln automatisch auf vat-api.eu (die alte Quelle ist nicht mehr wählbar/verfügbar). Kein Setup-Upgrade nötig — nach Composer-Update genügt `bin/magento setup:di:compile` und `cache:flush`.
+
+---
+
 ## [1.3.1] - 2026-06-09
 
 ### Behoben

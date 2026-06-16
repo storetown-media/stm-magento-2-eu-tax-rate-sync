@@ -24,6 +24,7 @@
 "Daily","Täglich"
 "Weekly","Wöchentlich"
 "Monthly","Monatlich"
-"EU VAT Rates API (Recommended)","EU VAT Rates API (Empfohlen)"
+"VAT-API.eu (Recommended)","VAT-API.eu (Empfohlen)"
+"EU VAT Rates API (Deprecated - outdated data)","EU VAT Rates API (Veraltet – Daten von 2016)"
 "Static Fallback (No API)","Statischer Fallback (Keine API)"
 "VatComply API (Deprecated - Not Working)","VatComply API (Veraltet - Nicht funktionsfähig)"

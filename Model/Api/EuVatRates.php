@@ -14,7 +14,17 @@ use Storetown\TaxSync\Api\TaxRateSourceInterface;
 use Storetown\TaxSync\Logger\Logger;
 
 /**
- * EU VAT Rates API source
+ * EU VAT Rates API source — DEPRECATED.
+ *
+ * euvatrates.com is no longer maintained: its rates.json reports
+ * "last_updated":"2016-01-01" and serves outdated rates (e.g. RO 20 % instead
+ * of the current 21 %). Critically, the endpoint still answers with HTTP 200
+ * and structurally valid JSON, so a naive availability probe would happily
+ * select it and never fall through to a fresh source.
+ *
+ * To close that trap this source is now permanently reported as unavailable;
+ * the pool uses {@see VatApiEu} or the static Fallback instead. The class is
+ * retained for backwards compatibility with stored `api_source` config values.
  */
 class EuVatRates implements TaxRateSourceInterface
 {
@@ -92,12 +102,8 @@ class EuVatRates implements TaxRateSourceInterface
      */
     public function isAvailable(): bool
     {
-        try {
-            $this->curl->setTimeout(5);
-            $this->curl->get(self::API_URL);
-            return $this->curl->getStatus() === 200;
-        } catch (\Exception $e) {
-            return false;
-        }
+        // Permanently unavailable: the upstream feed is frozen at 2016 data but
+        // still returns HTTP 200, so we must not let it be selected.
+        return false;
     }
 }

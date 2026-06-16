@@ -3,7 +3,7 @@
     <policies>
         <policy id="connect-src">
             <values>
-                <value id="euvatrates" type="host">euvatrates.com</value>
+                <value id="vatapieu" type="host">vat-api.eu</value>
             </values>
         </policy>
     </policies>
