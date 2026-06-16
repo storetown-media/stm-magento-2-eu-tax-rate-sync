@@ -5,6 +5,14 @@ Alle wichtigen Änderungen an dieser Extension werden in dieser Datei dokumentie
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.4.1] - 2026-06-16
+
+### Behoben
+
+- **Admin „Letzte Synchronisierung" zeigte ein falsches Datum** (z. B. 17.12.2021) und schien sich nach „Jetzt synchronisieren" nicht zu ändern. Ursache: Der Anzeige-Block reichte den gespeicherten `Y-m-d H:i:s`-UTC-Zeitstempel an `TimezoneInterface::date()` weiter — das parst Strings über das SHORT-Format der Locale und verwürfelt ISO-Datumswerte (falsches Datum, fehlende Sekunden). Der Zeitstempel wurde stets **korrekt gespeichert**, nur die Darstellung war defekt; der Sync (CLI wie Admin-Button) funktionierte. Fix: expliziter Parse als UTC + Umrechnung in die Shop-Zeitzone in `Block/Adminhtml/System/Config/LastSync.php`.
+
+---
+
 ## [1.4.0] - 2026-06-16
 
 ### Behoben

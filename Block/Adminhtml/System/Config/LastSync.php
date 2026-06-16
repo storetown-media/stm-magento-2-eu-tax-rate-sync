@@ -44,7 +44,17 @@ class LastSync extends Field
             return '<span style="color: #999;">' . __('Never synced') . '</span>';
         }
 
-        $formattedDate = $this->timezone->date($lastSync)->format('d.m.Y H:i:s');
+        // Stored as a UTC "Y-m-d H:i:s" string via DateTime::gmtDate(). Parse it
+        // explicitly and convert to the configured timezone. Do NOT pass the
+        // string to TimezoneInterface::date(): that parses via the locale's SHORT
+        // format and mangles ISO datetimes (wrong date, dropped seconds).
+        try {
+            $date = new \DateTime((string) $lastSync, new \DateTimeZone('UTC'));
+            $date->setTimezone(new \DateTimeZone($this->timezone->getConfigTimezone()));
+            $formattedDate = $date->format('d.m.Y H:i:s');
+        } catch (\Exception $e) {
+            $formattedDate = (string) $lastSync;
+        }
         return '<span style="font-weight: bold;">' . $formattedDate . '</span>';
     }
 }
