@@ -1,0 +1,70 @@
+name: Release
+
+# Build the distribution ZIP and publish a GitHub Release whenever a
+# version tag (vX.Y.Z) is pushed. The ZIP mirrors build-zip.ps1:
+# flat module root, named storetown-module-tax-sync-<version>.zip,
+# dev/CI files excluded.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (tagged commit)
+        uses: actions/checkout@v4
+
+      - name: Derive version + sanity-check composer.json
+        id: ver
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          COMPOSER_VERSION="$(php -r 'echo json_decode(file_get_contents("composer.json"))->version;')"
+          echo "Tag: $TAG | composer.json: $COMPOSER_VERSION"
+          if [ "$VERSION" != "$COMPOSER_VERSION" ]; then
+            echo "::error::Tag ($VERSION) does not match composer.json version ($COMPOSER_VERSION)."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "zip=storetown-module-tax-sync-${VERSION}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Build distribution ZIP
+        run: |
+          ZIP="${{ steps.ver.outputs.zip }}"
+          zip -rqX "$ZIP" . \
+            -x '.git/*' '.git' \
+               '.github/*' '.github' \
+               '.gitignore' \
+               'Test/*' 'Test' \
+               'phpunit.xml.dist' '.phpunit.result.cache' \
+               'build-zip.ps1' \
+               '*.zip' '.DS_Store' 'Thumbs.db' '.claude/*'
+          echo "Built $ZIP:"; unzip -l "$ZIP" | tail -1
+
+      - name: Extract changelog section for this version
+        run: |
+          VERSION="${{ steps.ver.outputs.version }}"
+          awk -v ver="## [$VERSION]" '
+            index($0, ver) == 1 { started = 1; print; next }
+            started && /^## \[/ { exit }
+            started { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+          if [ ! -s RELEASE_NOTES.md ]; then
+            echo "Release ${GITHUB_REF_NAME}" > RELEASE_NOTES.md
+          fi
+          echo "--- release notes ---"; cat RELEASE_NOTES.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            "${{ steps.ver.outputs.zip }}" \
+            --title "${GITHUB_REF_NAME}" \
+            --notes-file RELEASE_NOTES.md
