@@ -42,8 +42,8 @@ class CronFrequency extends Value
         ScopeConfigInterface $config,
         TypeListInterface $cacheTypeList,
         private WriterInterface $configWriter,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct(

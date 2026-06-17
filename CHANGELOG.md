@@ -5,6 +5,12 @@ Alle wichtigen Änderungen an dieser Extension werden in dieser Datei dokumentie
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.4.2] - 2026-06-17
+
+### Behoben
+
+- **PHP 8.4-Kompatibilität.** Die implizit-nullable Konstruktor-Parameter in `Model/Config/Backend/CronFrequency.php` (`$resource`, `$resourceCollection`) sind jetzt explizit als nullable typisiert (`?AbstractResource` bzw. `?AbstractDb`). Behebt die Meldung *„Deprecated: Implicitly marking parameter as nullable"*, die unter **PHP 8.4** `bin/magento setup:di:compile` (und damit den Produktiv-Deploy) abbrechen ließ.
+
 ## [1.4.1] - 2026-06-16
 
 ### Behoben
