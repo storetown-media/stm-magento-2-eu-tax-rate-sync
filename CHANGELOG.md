@@ -5,6 +5,30 @@ Alle wichtigen Änderungen an dieser Extension werden in dieser Datei dokumentie
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+
+## [1.5.0] - 2026-08-23
+
+### Geändert
+
+- **Composer-Paketname von `storetown/module-tax-sync` auf
+  `storetown-media/module-tax-sync` geändert.** Damit tragen alle Storetown-Media-Module
+  denselben Vendor-Namespace. Der alte Name ist über `replace` hinterlegt: Composer erkennt
+  beide als dasselbe Paket, eine versehentliche Doppelinstallation ist ausgeschlossen.
+- Das feste `version`-Feld wurde aus der `composer.json` entfernt; maßgeblich ist der Git-Tag.
+
+### Unverändert
+
+- PHP-Namespace `Storetown\TaxSync\` und Magento-Modulname `Storetown_TaxSync` bleiben,
+  damit bestehende Installationen nicht brechen. Es ändert sich ausschließlich der Name,
+  unter dem Composer das Paket bezieht.
+
+### Umstieg
+
+```bash
+composer remove storetown/module-tax-sync
+composer require storetown-media/module-tax-sync
+```
+
 ## [1.4.2] - 2026-06-17
 
 ### Behoben

@@ -1,8 +1,7 @@
 {
-    "name": "storetown/module-tax-sync",
+    "name": "storetown-media/module-tax-sync",
     "description": "Automatic EU VAT rate synchronization for Magento 2 — imports and updates all European tax rates including automatic Tax Rule creation. Free open-source under MIT.",
     "type": "magento2-module",
-    "version": "1.4.2",
     "license": "MIT",
     "keywords": [
         "magento2",
@@ -48,6 +47,9 @@
         "magento/module-email": "^101.1",
         "magento/module-admin-notification": "^100.4",
         "magento/module-cron": "^100.4"
+    },
+    "replace": {
+        "storetown/module-tax-sync": "self.version"
     },
     "autoload": {
         "files": [
