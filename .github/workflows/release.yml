@@ -20,17 +20,23 @@ jobs:
       - name: Checkout (tagged commit)
         uses: actions/checkout@v4
 
-      - name: Derive version + sanity-check composer.json
+      - name: Derive version from tag
         id: ver
         run: |
+          # Die Version kommt ausschliesslich aus dem Git-Tag. Das frueher hier
+          # gepruefte "version"-Feld der composer.json gibt es nicht mehr - bei
+          # Composer ist der Tag die Quelle der Wahrheit, ein zweiter Eintrag
+          # koennte nur auseinanderlaufen.
           TAG="${GITHUB_REF_NAME}"
           VERSION="${TAG#v}"
-          COMPOSER_VERSION="$(php -r 'echo json_decode(file_get_contents("composer.json"))->version;')"
-          echo "Tag: $TAG | composer.json: $COMPOSER_VERSION"
-          if [ "$VERSION" != "$COMPOSER_VERSION" ]; then
-            echo "::error::Tag ($VERSION) does not match composer.json version ($COMPOSER_VERSION)."
+          if [ -z "$VERSION" ]; then
+            echo "::error::Konnte aus dem Tag '$TAG' keine Version ableiten."
             exit 1
           fi
+          if php -r 'exit(property_exists(json_decode(file_get_contents("composer.json")), "version") ? 0 : 1);'; then
+            echo "::warning::composer.json enthaelt wieder ein version-Feld - bei Tag-Releases besser entfernen."
+          fi
+          echo "Tag: $TAG -> Version: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "zip=storetown-module-tax-sync-${VERSION}.zip" >> "$GITHUB_OUTPUT"
 
