@@ -40,6 +40,9 @@ class TaxSyncService
     /** @var array<int, array{country: string, code: string, old_rate: float|null, new_rate: float}> */
     private array $changes = [];
 
+    /** @var array<int, array{country: string, code: string, current_rate: float, source_rate: float}> */
+    private array $kept = [];
+
     /** @var int[]|null */
     private ?array $customerTaxClassIds = null;
 
@@ -63,6 +66,7 @@ class TaxSyncService
      * @param DateTime $dateTime
      * @param LockManagerInterface $lockManager
      * @param Logger $logger
+     * @param RateMemory $rateMemory
      */
     public function __construct(
         private Config $config,
@@ -80,7 +84,8 @@ class TaxSyncService
         private WriterInterface $configWriter,
         private DateTime $dateTime,
         private LockManagerInterface $lockManager,
-        private Logger $logger
+        private Logger $logger,
+        private RateMemory $rateMemory
     ) {
     }
 
@@ -93,11 +98,13 @@ class TaxSyncService
     public function sync(bool $forceUpdate = false): array
     {
         $this->changes = [];
+        $this->kept = [];
         $result = [
             'success' => false,
             'created' => 0,
             'updated' => 0,
             'skipped' => 0,
+            'kept' => 0,
             'errors' => 0,
             'rules_created' => 0,
             'rules_skipped' => 0,
@@ -112,6 +119,7 @@ class TaxSyncService
         }
 
         try {
+            $this->rateMemory->load();
             $source = $this->apiSourcePool->getSource();
             $result['source'] = $source->getSourceName();
 
@@ -181,9 +189,9 @@ class TaxSyncService
             $result['success'] = true;
             $result['changes'] = $this->changes;
 
-            // Send notifications if there were changes
-            if (!empty($this->changes)) {
-                $this->notificationService->notifyRateChanges($this->changes);
+            // Send notifications if there were changes or newly kept rates
+            if (!empty($this->changes) || !empty($this->kept)) {
+                $this->notificationService->notifyRateChanges($this->changes, $this->kept);
             }
 
             $this->logger->info('Sync completed', $result);
@@ -192,10 +200,25 @@ class TaxSyncService
             $this->logger->error('Sync failed: ' . $e->getMessage());
             $this->notificationService->notifyError($e->getMessage());
         } finally {
+            $this->saveRateMemory();
             $this->lockManager->unlock(self::LOCK_NAME);
         }
 
         return $result;
+    }
+
+    /**
+     * Store which values were written; a failure must not break the sync.
+     *
+     * @return void
+     */
+    private function saveRateMemory(): void
+    {
+        try {
+            $this->rateMemory->save();
+        } catch (\Exception $e) {
+            $this->logger->error('Could not store the written rates: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -221,8 +244,15 @@ class TaxSyncService
 
                 // Check if rate changed (or force update)
                 if ($forceUpdate || abs($currentRate - $rate) > 0.001) {
+                    if (!$forceUpdate && $this->isToBeKept($code, $currentRate)) {
+                        $this->keepRate($country, $code, $currentRate, $rate);
+                        $result['status'] = 'kept';
+                        return $result;
+                    }
+
                     $existingRate->setRate($rate);
                     $this->taxRateRepository->save($existingRate);
+                    $this->rateMemory->remember($code, $rate);
 
                     $this->changes[] = [
                         'country' => $country,
@@ -236,6 +266,7 @@ class TaxSyncService
                     return $result;
                 }
 
+                $this->rateMemory->remember($code, $rate);
                 $result['status'] = 'skipped';
                 return $result;
             }
@@ -249,6 +280,7 @@ class TaxSyncService
                 ->setRate($rate);
 
             $savedRate = $this->taxRateRepository->save($taxRate);
+            $this->rateMemory->remember($code, $rate);
             $result['rate_id'] = (int) $savedRate->getId();
 
             $this->changes[] = [
@@ -264,6 +296,41 @@ class TaxSyncService
         } catch (\Exception $e) {
             $this->logger->error("Error processing {$code}: " . $e->getMessage());
             return $result;
+        }
+    }
+
+    /**
+     * Whether the rate was changed by hand and may not be overwritten.
+     *
+     * @param string $code
+     * @param float $currentRate
+     * @return bool
+     */
+    private function isToBeKept(string $code, float $currentRate): bool
+    {
+        return $this->config->isKeepManualRates() && $this->rateMemory->isChangedByHand($code, $currentRate);
+    }
+
+    /**
+     * Keep a rate changed by hand and report it once per value of the data source.
+     *
+     * @param string $country
+     * @param string $code
+     * @param float $currentRate
+     * @param float $sourceRate
+     * @return void
+     */
+    private function keepRate(string $country, string $code, float $currentRate, float $sourceRate): void
+    {
+        $this->logger->info("Kept {$code}: {$currentRate}% changed by hand, source has {$sourceRate}%");
+
+        if ($this->rateMemory->shouldReport($code, $sourceRate)) {
+            $this->kept[] = [
+                'country' => $country,
+                'code' => $code,
+                'current_rate' => $currentRate,
+                'source_rate' => $sourceRate,
+            ];
         }
     }
 

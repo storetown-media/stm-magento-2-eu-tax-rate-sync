@@ -50,6 +50,12 @@ class Run extends Action
                 );
                 $this->messageManager->addSuccessMessage((string) $message);
 
+                if ($result['kept'] > 0) {
+                    $this->messageManager->addNoticeMessage(
+                        (string) __('Rates changed by hand and kept: %1', $result['kept'])
+                    );
+                }
+
                 // Show Tax Rules info if enabled
                 $rulesCreated = $result['rules_created'] ?? 0;
                 $rulesSkipped = $result['rules_skipped'] ?? 0;

@@ -42,6 +42,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Also sync CH, NO, GB rates</comment>
                 </field>
+                <field id="keep_manual" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Keep Manual Changes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Rates you change under Tax Zones and Rates are not overwritten. You are notified once when the data source has a different value. This also applies to standard rates.</comment>
+                </field>
             </group>
             <group id="rules" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Tax Rules</label>

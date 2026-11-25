@@ -5,6 +5,26 @@ Alle wichtigen Änderungen an dieser Extension werden in dieser Datei dokumentie
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.5.3] - 2026-11-25
+
+### Neu
+
+- **Handänderungen bleiben erhalten.** Bisher setzte jeder Lauf von Hand geänderte Sätze zurück. Die Extension merkt sich
+  jetzt den Wert, den sie selbst geschrieben hat, und lässt abweichende Sätze stehen. Nennt die Datenquelle einen anderen
+  Wert, gibt es einmal einen Hinweis per E-Mail und im Admin. Stimmen beide Werte wieder überein, übernimmt die Automatik.
+  Abschaltbar unter „Keep Manual Changes“, `tax:sync:run --force` überschreibt weiterhin alles.
+- Admin und CLI zeigen, wie viele Sätze beibehalten wurden.
+
+### Behoben
+
+- Die Änderungsmail zeigte die Tabelle als HTML-Quelltext statt als Tabelle.
+- Die deutsche Übersetzung des Admin-Hinweises zu geänderten Sätzen greift wieder.
+- README nennt den aktuellen Paketnamen `storetown-media/module-tax-sync`.
+
+### Hinweis zum Update
+
+- Der erste Lauf nach dem Update setzt wie bisher alle Sätze einmal auf die Werte der Extension. Danach gilt der Schutz.
+
 ## [1.5.2] - 2026-11-25
 
 ### Behoben

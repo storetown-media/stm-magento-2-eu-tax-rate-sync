@@ -39,7 +39,7 @@ class SyncCommand extends Command
     {
         $this->setName('tax:sync:run')
             ->setDescription('Manually sync European VAT rates')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update all rates');
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update all rates, also those changed by hand');
     }
 
     /**
@@ -97,6 +97,7 @@ class SyncCommand extends Command
         $output->writeln("    Created: {$result['created']}");
         $output->writeln("    Updated: {$result['updated']}");
         $output->writeln("    Skipped: {$result['skipped']}");
+        $output->writeln("    Kept:    {$result['kept']} (changed by hand)");
         $output->writeln("    Errors:  {$result['errors']}");
 
         if (isset($result['rules_created']) || isset($result['rules_skipped'])) {

@@ -50,6 +50,7 @@ class SyncTaxRates
                 'created' => $result['created'],
                 'updated' => $result['updated'],
                 'skipped' => $result['skipped'],
+                'kept' => $result['kept'],
             ]);
         } catch (\Exception $e) {
             $this->logger->error('Scheduled sync failed: ' . $e->getMessage());

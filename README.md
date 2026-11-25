@@ -11,7 +11,7 @@
 [![Hyvä](https://img.shields.io/badge/Hyv%C3%A4-Compatible-FF6B35.svg)](https://www.hyva.io/)
 [![Made in Germany](https://img.shields.io/badge/Made%20in-Germany-black.svg)](https://www.storetown-media.de/)
 
-[📦 **Packagist**](https://packagist.org/packages/storetown/module-tax-sync) · [📚 **Produktseite**](https://www.storetown-media.de/eu-tax-rate-sync-fuer-magento-2-community/) · [💼 **Storetown-Media Org**](https://github.com/storetown-media)
+[📦 **Packagist**](https://packagist.org/packages/storetown-media/module-tax-sync) · [📚 **Produktseite**](https://www.storetown-media.de/eu-tax-rate-sync-fuer-magento-2-community/) · [💼 **Storetown-Media Org**](https://github.com/storetown-media)
 
 ---
 
@@ -37,7 +37,7 @@ Diese kostenlose Extension importiert und aktualisiert automatisch alle EU-Mehrw
 ### Via Composer (empfohlen)
 
 ```bash
-composer require storetown/module-tax-sync
+composer require storetown-media/module-tax-sync
 bin/magento module:enable Storetown_TaxSync
 bin/magento setup:upgrade
 bin/magento setup:di:compile
@@ -71,6 +71,7 @@ Navigieren Sie zu **Stores → Configuration → Storetown → EU Tax Rate Sync*
 | Sync Frequency | Täglich, Wöchentlich oder Monatlich |
 | Data Source | API-Quelle (vat-api.eu empfohlen) |
 | Include Non-EU | CH, NO, GB mit einbeziehen |
+| Keep Manual Changes | Von Hand geänderte Sätze nicht überschreiben (Standard: Ja) |
 
 ### Tax Rules
 
@@ -155,6 +156,8 @@ bin/magento tax:sync:status
 | Norwegen | NO | 25% | 15% |
 
 > **Datenquelle & ermäßigte Sätze:** Standardsätze werden live von [vat-api.eu](https://vat-api.eu/) bezogen (kostenlos, ohne API-Key); bei nicht erreichbarer API greifen die gepflegten Fallback-Daten. Da viele Länder **mehrere** ermäßigte Sätze haben (super-reduziert / ermäßigt / Park), importiert die Extension pro Land **einen** ermäßigten Hauptsatz (Bücher, Medikamente, Grundnahrungsmittel). Diesen können Sie pro Land jederzeit unter **Stores → Tax Zones and Rates** anpassen.
+
+> **Handänderungen (ab 1.5.3):** Ändern Sie einen Satz von Hand, bleibt er erhalten, auch ein Standardsatz. Nennt die Datenquelle einen anderen Wert, werden Sie einmal benachrichtigt. Stimmen beide Werte wieder überein, übernimmt die Automatik. `bin/magento tax:sync:run --force` überschreibt alle Sätze. Der erste Lauf nach dem Update von einer älteren Version setzt einmalig alle Sätze auf die Werte der Extension, danach gilt der Schutz.
 
 ---
 

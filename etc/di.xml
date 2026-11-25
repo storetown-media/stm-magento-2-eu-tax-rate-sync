@@ -29,6 +29,7 @@
             <argument name="dateTime" xsi:type="object">Magento\Framework\Stdlib\DateTime\DateTime</argument>
             <argument name="lockManager" xsi:type="object">Magento\Framework\Lock\LockManagerInterface</argument>
             <argument name="logger" xsi:type="object">Storetown\TaxSync\Logger\Logger</argument>
+            <argument name="rateMemory" xsi:type="object">Storetown\TaxSync\Model\RateMemory</argument>
         </arguments>
     </type>
 

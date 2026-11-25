@@ -29,6 +29,9 @@ class Config extends AbstractHelper
     private const XML_PATH_INCLUDE_NON_EU = 'tax_sync/general/include_non_eu';
 
     /** @var string */
+    private const XML_PATH_KEEP_MANUAL = 'tax_sync/general/keep_manual';
+
+    /** @var string */
     private const XML_PATH_CREATE_RULES = 'tax_sync/rules/create_rules';
 
     /** @var string */
@@ -112,6 +115,19 @@ class Config extends AbstractHelper
     {
         return $this->scopeConfig->isSetFlag(
             self::XML_PATH_INCLUDE_NON_EU,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if rates changed by hand are kept.
+     *
+     * @return bool
+     */
+    public function isKeepManualRates(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_KEEP_MANUAL,
             ScopeInterface::SCOPE_STORE
         );
     }

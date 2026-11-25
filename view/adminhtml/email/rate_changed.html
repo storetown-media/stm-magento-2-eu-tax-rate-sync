@@ -19,7 +19,7 @@
         </div>
 
         <p style="margin: 0 0 15px;">
-            Folgende Steuersätze wurden in <strong>{{var store_name}}</strong> automatisch aktualisiert:
+            Folgende Steuersätze haben sich in <strong>{{var store_name}}</strong> geändert oder weichen von der Datenquelle ab:
         </p>
 
         <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
@@ -32,7 +32,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{var changes}}
+                {{var changes|raw}}
             </tbody>
         </table>
 
