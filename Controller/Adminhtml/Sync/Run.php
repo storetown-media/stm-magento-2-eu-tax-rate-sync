@@ -48,7 +48,7 @@ class Run extends Action
                     $result['updated'],
                     $result['skipped']
                 );
-                $this->messageManager->addSuccessMessage($message);
+                $this->messageManager->addSuccessMessage((string) $message);
 
                 // Show Tax Rules info if enabled
                 $rulesCreated = $result['rules_created'] ?? 0;
@@ -59,7 +59,7 @@ class Run extends Action
                         $rulesCreated,
                         $rulesSkipped
                     );
-                    $this->messageManager->addSuccessMessage($rulesMessage);
+                    $this->messageManager->addSuccessMessage((string) $rulesMessage);
                 }
 
                 if (!empty($result['changes'])) {
@@ -73,16 +73,16 @@ class Run extends Action
                             $oldRate,
                             number_format($change['new_rate'], 2)
                         );
-                        $this->messageManager->addNoticeMessage($changeMsg);
+                        $this->messageManager->addNoticeMessage((string) $changeMsg);
                     }
                 }
             } else {
                 $this->messageManager->addErrorMessage(
-                    __('Tax rate sync failed. Check var/log/tax_sync.log for details.')
+                    (string) __('Tax rate sync failed. Check var/log/tax_sync.log for details.')
                 );
             }
         } catch (\Exception $e) {
-            $this->messageManager->addErrorMessage(__('Error: %1', $e->getMessage()));
+            $this->messageManager->addErrorMessage((string) __('Error: %1', $e->getMessage()));
         }
 
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

@@ -23,7 +23,7 @@ class Info extends Field
     /**
      * @param Context $context
      * @param PackageInfoFactory $packageInfoFactory
-     * @param array $data
+     * @param mixed[] $data
      */
     public function __construct(
         Context $context,
@@ -68,15 +68,15 @@ class Info extends Field
         <div style="background:#e8f5e9;border-radius:6px;padding:12px;">
             <h4 style="margin:0 0 8px 0;color:#2e7d32;font-size:13px;">Datenquellen</h4>
             <p style="margin:0;font-size:12px;color:#555;">
-                Prim&auml;r: EU VAT Rates API<br>
-                Fallback: Statische Daten (Jan 2025)
+                Standards&auml;tze: live von VAT-API.eu<br>
+                Erm&auml;&szlig;igte S&auml;tze und Fallback: gepflegte Liste (Nov 2026)
             </p>
         </div>
         <div style="background:#e3f2fd;border-radius:6px;padding:12px;">
             <h4 style="margin:0 0 8px 0;color:#1565c0;font-size:13px;">Letzte Aktualisierung</h4>
             <p style="margin:0;font-size:12px;color:#555;">
-                Die API-Daten werden bei jedem Sync<br>
-                auf Aktualit&auml;t gepr&uuml;ft.
+                Die Standards&auml;tze werden bei jedem Sync<br>
+                neu abgerufen.
             </p>
         </div>
     </div>

@@ -19,7 +19,7 @@ namespace Storetown\TaxSync\Model\Data;
  *
  * @see EuVatReducedRates for the EU reduced-rate map.
  */
-final class NonEuVatRates
+class NonEuVatRates
 {
     /**
      * ISO-3166-1 alpha-2 => ['standard' => float, 'reduced' => float].

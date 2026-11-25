@@ -19,7 +19,7 @@ class ApiSourcePool
     /**
      * @param Config $config
      * @param Logger $logger
-     * @param array $sources
+     * @param TaxRateSourceInterface[] $sources
      */
     public function __construct(
         private Config $config,
@@ -70,7 +70,7 @@ class ApiSourcePool
     /**
      * Get all registered sources.
      *
-     * @return array
+     * @return TaxRateSourceInterface[]
      */
     public function getAllSources(): array
     {

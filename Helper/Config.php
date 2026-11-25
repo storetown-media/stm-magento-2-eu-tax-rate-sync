@@ -132,7 +132,7 @@ class Config extends AbstractHelper
     /**
      * Get configured customer tax class IDs.
      *
-     * @return array
+     * @return int[]
      */
     public function getCustomerTaxClassIds(): array
     {
@@ -149,7 +149,7 @@ class Config extends AbstractHelper
     /**
      * Get configured product tax class IDs.
      *
-     * @return array
+     * @return int[]
      */
     public function getProductTaxClassIds(): array
     {
@@ -166,7 +166,7 @@ class Config extends AbstractHelper
     /**
      * Get configured reduced product tax class IDs.
      *
-     * @return array
+     * @return int[]
      */
     public function getReducedProductTaxClassIds(): array
     {
@@ -232,7 +232,7 @@ class Config extends AbstractHelper
     /**
      * Get list of EU country codes.
      *
-     * @return array
+     * @return string[]
      */
     public function getEuCountries(): array
     {
@@ -246,7 +246,7 @@ class Config extends AbstractHelper
     /**
      * Get list of non-EU country codes.
      *
-     * @return array
+     * @return string[]
      */
     public function getNonEuCountries(): array
     {
@@ -256,7 +256,7 @@ class Config extends AbstractHelper
     /**
      * Get all country codes (EU + optionally non-EU).
      *
-     * @return array
+     * @return string[]
      */
     public function getAllCountries(): array
     {

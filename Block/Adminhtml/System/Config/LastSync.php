@@ -22,7 +22,7 @@ class LastSync extends Field
      * @param Context $context
      * @param TimezoneInterface $timezone
      * @param ScopeConfigInterface $scopeConfig
-     * @param array $data
+     * @param mixed[] $data
      */
     public function __construct(
         Context $context,

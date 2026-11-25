@@ -43,7 +43,7 @@ class NotificationService
     /**
      * Notify about rate changes via email and admin notification.
      *
-     * @param array $changes
+     * @param array<int,array{country:string,code:string,old_rate:float|null,new_rate:float}> $changes
      * @return void
      */
     public function notifyRateChanges(array $changes): void
@@ -53,8 +53,9 @@ class NotificationService
         }
 
         // Email notification
-        if ($this->config->isEmailNotificationEnabled() && $this->config->getEmailRecipient()) {
-            $this->sendEmailNotification($changes);
+        $recipient = (string) $this->config->getEmailRecipient();
+        if ($this->config->isEmailNotificationEnabled() && $recipient !== '') {
+            $this->sendEmailNotification($changes, $recipient);
         }
 
         // Admin notification
@@ -84,10 +85,11 @@ class NotificationService
     /**
      * Send email notification about rate changes.
      *
-     * @param array $changes
+     * @param array<int,array{country:string,code:string,old_rate:float|null,new_rate:float}> $changes
+     * @param string $recipient
      * @return void
      */
-    private function sendEmailNotification(array $changes): void
+    private function sendEmailNotification(array $changes, string $recipient): void
     {
         try {
             $this->inlineTranslation->suspend();
@@ -107,7 +109,7 @@ class NotificationService
                     'sync_date' => $this->dateTime->gmtDate('d.m.Y H:i'),
                 ])
                 ->setFromByScope('general')
-                ->addTo($this->config->getEmailRecipient())
+                ->addTo($recipient)
                 ->getTransport();
 
             $transport->sendMessage();
@@ -123,7 +125,7 @@ class NotificationService
     /**
      * Add admin panel notification about rate changes.
      *
-     * @param array $changes
+     * @param array<int,array{country:string,code:string,old_rate:float|null,new_rate:float}> $changes
      * @return void
      */
     private function addAdminNotification(array $changes): void
@@ -149,7 +151,7 @@ class NotificationService
     /**
      * Build HTML table rows for email notification.
      *
-     * @param array $changes
+     * @param array<int,array{country:string,code:string,old_rate:float|null,new_rate:float}> $changes
      * @return string
      */
     private function buildChangesHtml(array $changes): string

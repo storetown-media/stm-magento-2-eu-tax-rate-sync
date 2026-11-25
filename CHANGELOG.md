@@ -5,6 +5,31 @@ Alle wichtigen Änderungen an dieser Extension werden in dieser Datei dokumentie
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.5.2] - 2026-11-25
+
+### Behoben
+
+- **Ermäßigte Sätze auf den Stand November 2026 gebracht.** Finnland 13,5 % statt 14 % (seit 01.01.2026), Litauen 5 %
+  statt 9 % (der Satz von 9 % ist seit 01.01.2026 abgeschafft), Schweden 6 % statt 12 % (Lebensmittel, 01.04.2026 bis
+  31.12.2027). Bestehende Installationen übernehmen die neuen Werte beim nächsten Lauf. Bitte prüfen, ob der Satz zum
+  eigenen Sortiment passt: In Litauen gelten daneben 12 %, in Schweden 12 %. Der frühere Hinweis, vat-api.eu liefere
+  für Finnland einen falschen Wert, traf nicht zu.
+- Der Infoblock im Admin nennt die tatsächlichen Datenquellen.
+- **Steuerregel ohne Satz wird wieder verknüpft.** Wurde der letzte Satz einer automatisch
+  angelegten Regel gelöscht, verlor die Regel auch ihre Kunden- und Produktsteuerklassen. Der
+  nächste Lauf legte den Satz neu an, konnte die Regel aber nicht speichern
+  („customer_tax_class_ids is required“), der Satz blieb ohne Wirkung. Die Regel erhält jetzt
+  ihre konfigurierten Steuerklassen zurück.
+
+### Geändert
+
+- Magento Coding Standard 40: 0 Fehler und 0 Warnungen in PHP- und Template-Dateien (vorher 2 Fehler, 1 Warnung).
+- PHPStan mit bitExpert/phpstan-magento: 0 Meldungen bis Stufe 8.
+- `Storetown\TaxSync\Logger\Logger` erbt nicht mehr von `Monolog\Logger` (dort als final markiert),
+  sondern reicht die Einträge an einen eigenen Monolog-Kanal weiter. Protokolldatei, Format und
+  alle Log-Methoden bleiben gleich.
+- Die statische Methode `EuVatReducedRates::forCountry()` entfällt, die Werte stehen in
+  `EuVatReducedRates::MAP`.
 
 ## [1.5.0] - 2026-08-23
 

@@ -16,6 +16,8 @@ class Frequency implements OptionSourceInterface
 {
     /**
      * @inheritdoc
+     *
+     * @return array<int, array{value: string, label: \Magento\Framework\Phrase}>
      */
     public function toOptionArray(): array
     {

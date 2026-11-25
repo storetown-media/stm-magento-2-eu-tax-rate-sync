@@ -26,8 +26,7 @@ use Storetown\TaxSync\Model\Data\NonEuVatRates;
  * - standard rate: taken live from the API (this is the legally critical,
  *   frequently changing value and is reliable upstream).
  * - reduced rate: taken from the curated {@see EuVatReducedRates} map, because
- *   the API exposes several reduced rates per country without a type marker and
- *   has been observed to contain reduced-rate data errors (e.g. FI 13.5 %).
+ *   the API exposes several reduced rates per country without a type marker.
  */
 class VatApiEu implements TaxRateSourceInterface
 {
@@ -82,7 +81,7 @@ class VatApiEu implements TaxRateSourceInterface
                 continue;
             }
 
-            $reducedRate = EuVatReducedRates::forCountry($countryCode);
+            $reducedRate = EuVatReducedRates::MAP[$countryCode] ?? 0.0;
             if (!array_key_exists($countryCode, EuVatReducedRates::MAP)) {
                 $this->logger->warning(
                     "VatApiEu: no curated reduced rate for {$countryCode}, importing standard only"

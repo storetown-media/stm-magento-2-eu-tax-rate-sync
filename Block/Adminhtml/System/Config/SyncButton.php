@@ -34,13 +34,17 @@ class SyncButton extends Field
      */
     public function getButtonHtml(): string
     {
-        $button = $this->getLayout()
-            ->createBlock(\Magento\Backend\Block\Widget\Button::class)
-            ->setData([
-                'id' => 'tax_sync_button',
-                'label' => __('Sync Now'),
-                'onclick' => 'setLocation(\'' . $this->getSyncUrl() . '\')',
-            ]);
+        $button = $this->getLayout()->createBlock(
+            \Magento\Backend\Block\Widget\Button::class,
+            '',
+            [
+                'data' => [
+                    'id' => 'tax_sync_button',
+                    'label' => __('Sync Now'),
+                    'onclick' => 'setLocation(\'' . $this->getSyncUrl() . '\')',
+                ],
+            ]
+        );
 
         return $button->toHtml();
     }

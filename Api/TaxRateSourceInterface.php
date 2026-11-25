@@ -12,7 +12,7 @@ interface TaxRateSourceInterface
     /**
      * Fetch VAT rates from external source
      *
-     * @return array Array of ['country' => 'XX', 'standard' => 19.0, 'reduced' => 7.0]
+     * @return array<int, array{country: string, standard: float, reduced: float}>
      */
     public function fetchRates(): array;
 

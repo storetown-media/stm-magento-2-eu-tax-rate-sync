@@ -15,7 +15,7 @@ use Storetown\TaxSync\Model\Data\NonEuVatRates;
 /**
  * Fallback with static VAT rates, used when no live source is reachable.
  *
- * Last reviewed: June 2026.
+ * Last reviewed: November 2026.
  *
  * Standard rates are a snapshot of the live data; EU reduced rates come from the
  * shared {@see EuVatReducedRates} map and non-EU rates from {@see NonEuVatRates},
@@ -75,7 +75,7 @@ class Fallback implements TaxRateSourceInterface
      */
     public function fetchRates(): array
     {
-        $this->logger->info('Using fallback static rates (reviewed June 2026)');
+        $this->logger->info('Using fallback static rates (reviewed November 2026)');
 
         $rates = [];
 
@@ -83,7 +83,7 @@ class Fallback implements TaxRateSourceInterface
             $rates[] = [
                 'country' => $country,
                 'standard' => $standard,
-                'reduced' => EuVatReducedRates::forCountry($country),
+                'reduced' => EuVatReducedRates::MAP[$country],
             ];
         }
 
@@ -103,7 +103,7 @@ class Fallback implements TaxRateSourceInterface
      */
     public function getSourceName(): string
     {
-        return 'Fallback (Static - reviewed Jun 2026)';
+        return 'Fallback (Static - reviewed Nov 2026)';
     }
 
     /**

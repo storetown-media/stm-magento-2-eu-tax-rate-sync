@@ -126,7 +126,7 @@ bin/magento tax:sync:status
 | Tschechien | CZ | 21% | 12% |
 | Dänemark | DK | 25% | - |
 | Estland | EE | 24% | 9% |
-| Finnland | FI | 25,5% | 14% |
+| Finnland | FI | 25,5% | 13,5% |
 | Frankreich | FR | 20% | 5,5% |
 | Deutschland | DE | 19% | 7% |
 | Griechenland | GR | 24% | 13% |
@@ -134,7 +134,7 @@ bin/magento tax:sync:status
 | Irland | IE | 23% | 13,5% |
 | Italien | IT | 22% | 10% |
 | Lettland | LV | 21% | 12% |
-| Litauen | LT | 21% | 9% |
+| Litauen | LT | 21% | 5% |
 | Luxemburg | LU | 17% | 8% |
 | Malta | MT | 18% | 7% |
 | Niederlande | NL | 21% | 9% |
@@ -144,7 +144,7 @@ bin/magento tax:sync:status
 | Slowakei | SK | 23% | 5% |
 | Slowenien | SI | 22% | 9,5% |
 | Spanien | ES | 21% | 10% |
-| Schweden | SE | 25% | 12% |
+| Schweden | SE | 25% | 6% |
 
 ### Nicht-EU (optional)
 

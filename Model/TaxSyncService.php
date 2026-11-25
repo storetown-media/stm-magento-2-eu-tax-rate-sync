@@ -19,6 +19,8 @@ use Magento\Tax\Api\Data\TaxRuleInterfaceFactory;
 use Magento\Tax\Api\TaxClassRepositoryInterface;
 use Magento\Tax\Api\TaxRateRepositoryInterface;
 use Magento\Tax\Api\TaxRuleRepositoryInterface;
+use Magento\Tax\Model\Calculation\Rate;
+use Magento\Tax\Model\Calculation\Rule;
 use Magento\Tax\Model\ResourceModel\Calculation\Rate\CollectionFactory as RateCollectionFactory;
 use Magento\Tax\Model\ResourceModel\Calculation\Rule\CollectionFactory as RuleCollectionFactory;
 use Storetown\TaxSync\Helper\Config;
@@ -35,16 +37,13 @@ class TaxSyncService
     /** @var int */
     private const LOCK_TIMEOUT = 300;
 
-    /** @var array */
+    /** @var array<int, array{country: string, code: string, old_rate: float|null, new_rate: float}> */
     private array $changes = [];
-
-    /** @var array */
-    private array $ruleChanges = [];
 
     /** @var int[]|null */
     private ?array $customerTaxClassIds = null;
 
-    /** @var array */
+    /** @var array<string, int[]> */
     private array $productTaxClassIdsByType = [];
 
     /**
@@ -89,12 +88,11 @@ class TaxSyncService
      * Synchronize VAT rates from the configured API source.
      *
      * @param bool $forceUpdate
-     * @return array
+     * @return mixed[]
      */
     public function sync(bool $forceUpdate = false): array
     {
         $this->changes = [];
-        $this->ruleChanges = [];
         $result = [
             'success' => false,
             'created' => 0,
@@ -207,7 +205,7 @@ class TaxSyncService
      * @param string $type
      * @param float $rate
      * @param bool $forceUpdate
-     * @return array
+     * @return array{status: string, rate_id: int|null}
      */
     private function processRate(string $country, string $type, float $rate, bool $forceUpdate): array
     {
@@ -298,7 +296,16 @@ class TaxSyncService
 
                 // Add rate to existing rule
                 $existingRateIds[] = $rateId;
-                $existingRule->setTaxRateIds(array_unique($existingRateIds));
+                $existingRule->setTaxRateIds(array_values(array_unique($existingRateIds)));
+
+                // Magento keeps the classes of a rule together with its rates. A rule that lost
+                // its last rate has no classes left either and cannot be saved without them.
+                $existingRule->setCustomerTaxClassIds(
+                    $existingRule->getCustomerTaxClassIds() ?: $this->getCustomerTaxClassIds()
+                );
+                $existingRule->setProductTaxClassIds(
+                    $existingRule->getProductTaxClassIds() ?: $this->getProductTaxClassIds($type)
+                );
                 $this->taxRuleRepository->save($existingRule);
 
                 $this->logger->info("Updated rule {$ruleCode} with rate {$rateId}");
@@ -324,11 +331,6 @@ class TaxSyncService
 
             $this->taxRuleRepository->save($taxRule);
 
-            $this->ruleChanges[] = [
-                'code' => $ruleCode,
-                'rate_id' => $rateId,
-            ];
-
             $this->logger->info("Created rule {$ruleCode}");
             return 'rules_created';
         } catch (\Exception $e) {
@@ -341,30 +343,30 @@ class TaxSyncService
      * Find existing tax rate by code.
      *
      * @param string $code
-     * @return object|null
+     * @return Rate|null
      */
-    private function findExistingRate(string $code): ?object
+    private function findExistingRate(string $code): ?Rate
     {
         $collection = $this->rateCollectionFactory->create();
         $collection->addFieldToFilter('code', $code);
         $item = $collection->getFirstItem();
 
-        return $item->getId() ? $item : null;
+        return $item instanceof Rate && $item->getId() ? $item : null;
     }
 
     /**
      * Find existing tax rule by code.
      *
      * @param string $code
-     * @return object|null
+     * @return Rule|null
      */
-    private function findExistingRule(string $code): ?object
+    private function findExistingRule(string $code): ?Rule
     {
         $collection = $this->ruleCollectionFactory->create();
         $collection->addFieldToFilter('code', $code);
         $item = $collection->getFirstItem();
 
-        return $item->getId() ? $item : null;
+        return $item instanceof Rule && $item->getId() ? $item : null;
     }
 
     /**
@@ -372,7 +374,7 @@ class TaxSyncService
      *
      * Returns configured class IDs or defaults to "Retail Customer" (ID: 3).
      *
-     * @return array
+     * @return int[]
      */
     private function getCustomerTaxClassIds(): array
     {
@@ -396,7 +398,7 @@ class TaxSyncService
             $ids = [];
 
             foreach ($taxClasses->getItems() as $taxClass) {
-                $ids[] = $taxClass->getClassId();
+                $ids[] = (int) $taxClass->getClassId();
             }
 
             $this->customerTaxClassIds = $ids;
@@ -417,7 +419,7 @@ class TaxSyncService
      * otherwise Magento sums all tax rules for the same class (e.g. 19% + 7% = 26%).
      *
      * @param string $rateType
-     * @return array
+     * @return int[]
      */
     private function getProductTaxClassIds(string $rateType): array
     {
